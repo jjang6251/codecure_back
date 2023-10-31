@@ -9,10 +9,20 @@
         label {
             display: block;
         }
+        span{
+            display: inline-block;
+        }
+        input {
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
-    <label>아이디</label>
-    <input type="id" placeholder="대소문자 8글자", required>
+    아이디:  <input id="id" type="id" placeholder="대소문자 8글자", required><br>
+    비밀번호:  <input id="password" type="password" placeholder="pw", required><br>
+    이름:   <input id="username" type="text" placeholder="name", required><br>
+    <button>제출</button>
+    
+    <script type="text/javascript" src="./src/js/signup.js"></script>
 </body>
 </html>
