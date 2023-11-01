@@ -1,5 +1,3 @@
-const { response } = require("express");
-
 const id =  document.querySelector("#id");
 const password =  document.querySelector("#password");
 const username =  document.querySelector("#username");
@@ -14,12 +12,12 @@ function signup(){
         username: username.value,
     };
     console.log(request);
-}
 
-fetch('/signup', {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify(request)
-})
+    fetch("/signup", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(request),
+    });
+}
