@@ -8,6 +8,16 @@ const PORT = '3000';
 
 const app = express();
 
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize('database', 'username', 'password', {
+  host: 'localhost',
+  dialect: 'mysql',
+  charset: 'utf8mb4', // 올바른 문자 인코딩 설정
+  collate: 'utf8mb4_unicode_ci',
+  // 나머지 연결 설정
+});
+
+app.use(express.json());
 app.use(express.static(__dirname + '/src')); // 정적 파일 서비스**
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -29,9 +39,6 @@ app.get('/homepage', (req, res) => {
 
 
 app.get('/', (req, res) => {
-    if(req.session.user){
-      return res.redirect("/homepage");
-    }
     const userInput = req.body;
     console.log(userInput);
     return res.sendFile(__dirname + "/src/html/home.html");
@@ -81,6 +88,7 @@ app.post('/login', (req, res) => {
                 if(result) {
                     console.log('login 성공');
                     req.session.user = result;
+                    req.session.userid = req.body.id
                     return res.status(200).send('success');
                 }
                 else {
@@ -94,6 +102,43 @@ app.post('/login', (req, res) => {
             return res.status(404).send('해당하는 ID를 찾을 수 없습니다.');
           }
         })
+})
+
+app.get("/boardList", (req, res) => {
+  return res.sendFile(__dirname + "/src/html/boardList.html");
+})
+
+app.get('/boardList/api', async (req, res) => {
+  try {
+    // 데이터베이스에서 게시글 정보 조회
+    const posts = await models.Board.findAll();
+    console.log(posts);
+
+    // 클라이언트로 HTML 파일과 게시글 정보를 전달
+    res.json({ posts });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.get("/boardWrite", (req, res) => {
+  if(req.session.user){
+    return res.sendFile(__dirname + "/src/html/boardWrite.html");
+  }
+});
+
+app.post("/boardWrite", (req, res) => {
+  if(req.session.user){
+    console.log(req.body);
+    models.Board.create({
+      title: req.body.title,
+      content: req.body.content,
+      count: 0,
+      User: req.session.userid
+    })
+  }
+
 })
 
 app.use((err, req, res, next) => {

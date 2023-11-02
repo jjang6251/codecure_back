@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판</title>
+    <link rel="stylesheet", href="https://unpkg.com/mvp.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .post {
+            margin-bottom: 20px;
+        }
+        li {
+            list-style-type: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>게시판</h1>
+        <a href="/boardWrite">게시판 작성</a>
+        <!-- 게시글 목록 -->
+        <h2>게시글 목록</h2>
+        <ul id="post-list">
+            <!-- 게시글이 여기에 동적으로 추가됩니다. -->
+        </ul>
+        
+        <!-- 선택된 게시글의 상세 내용 -->
+        <div id="post-detail">
+            <!-- 게시글의 상세 내용이 여기에 동적으로 표시됩니다. -->
+        </div>
+    </div>
+
+    <script type="text/javascript" src="../js/boardList.js"></script>
+</body>
+</html>
