@@ -10,12 +10,23 @@ function login() {
         password : password.value,
     };
     console.log(request);
+    
+    fetch("/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(request)
+    })
+    .then((response) => {
+        if(response.ok) {
+            return response.text();
+        }
+        throw new Error('네트워크 응답 실패');
+    })
+    .then((data) => {
+        console.log(data);
+        alert(data);
+    })
 }
 
-fetch('login', {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/jason"
-    },
-    body: JSON.stringify(request)
-});

@@ -34,9 +34,35 @@ app.get('/login', (req, res) => {
     res.sendFile(__dirname + "/src/html/login.html");
 })
 
+app.post('/login', (req, res) => {
+    console.log(req.body);
+
+    models.User.findOne({
+        where: {
+          user_id: req.body.id
+        }
+      })
+        .then(foundData => {
+          if (foundData) {
+            if(req.body.password == foundData.user_password){
+                console.log('login 성공');
+                return res.status(200).send('로그인 성공');
+            }
+            else{
+                console.log('login 실패');
+                return res.status(401).send('비밀번호가 일치하지 않습니다.');
+            }
+         }
+          else {
+            console.log('해당하는 id를 찾을 수 없습니다.');
+            return res.status(404).send('해당하는 ID를 찾을 수 없습니다.');
+          }
+        })
+})
+
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).send('Something went wrong!');
+    return res.status(500).send('Something went wrong!');
   });
   
 
