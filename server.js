@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const models = require("./models");
+const bcrypt = require('bcrypt');
 const PORT = '3000';
 
 const app = express();
@@ -21,13 +22,19 @@ app.get('/signup', (req, res) => {
 })
 
 app.post('/signup', (req, res) =>{
+    const saltRounds = 10;
+    const password = req.body.password;
+    bcrypt.hash(password, saltRounds, function(err, hashed_password){
+        if(err) throw err;
+        models.User.create({
+            user_name: req.body.username,
+            user_id: req.body.id,
+            user_password: hashed_password,
+        })
+    })
+
     console.log(req.body.id);
     res.sendStatus(200);
-    models.User.create({
-        user_name: req.body.username,
-        user_id: req.body.id,
-        user_password: req.body.password,
-    })
 })
 
 app.get('/login', (req, res) => {
@@ -36,7 +43,7 @@ app.get('/login', (req, res) => {
 
 app.post('/login', (req, res) => {
     console.log(req.body);
-
+    const response_password = req.body.password;
     models.User.findOne({
         where: {
           user_id: req.body.id
@@ -44,14 +51,17 @@ app.post('/login', (req, res) => {
       })
         .then(foundData => {
           if (foundData) {
-            if(req.body.password == foundData.user_password){
-                console.log('login 성공');
-                return res.status(200).send('로그인 성공');
-            }
-            else{
-                console.log('login 실패');
-                return res.status(401).send('비밀번호가 일치하지 않습니다.');
-            }
+            bcrypt.compare(response_password, foundData.user_password, function(err, result){
+                if (err) throw err;
+                if(result) {
+                    console.log('login 성공');
+                    return res.status(200).send('login 성공');
+                }
+                else {
+                    console.log('로그인 실패(비밀번호 불일치)');
+                    return res.status(200).send('login 실패');
+                }
+            })
          }
           else {
             console.log('해당하는 id를 찾을 수 없습니다.');
@@ -64,6 +74,7 @@ app.use((err, req, res, next) => {
     console.error(err.stack);
     return res.status(500).send('Something went wrong!');
   });
+
   
 
 
