@@ -27,7 +27,9 @@ function login() {
     .then((data) => {
         console.log(data);
         alert(data);
-        window.location.href = "/";
+        if("success" === data){
+            window.location.href = "/";
+        }
     })
 }
 

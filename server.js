@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const models = require("./models");
 const bcrypt = require('bcrypt');
+const cookieParser = require("cookie-parser");
+const expressSession = require('express-session');
 const PORT = '3000';
 
 const app = express();
@@ -10,15 +12,38 @@ app.use(express.static(__dirname + '/src')); // 정적 파일 서비스**
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 //URL을 통해 전달되는 데이터에 한글,공백 등과 같은 문자가 포함될 경우 제대로 인식되지 않는 문제 해결
+app.use(cookieParser());
 
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + "/src/html/home.html");
-    const userInput = req.body;
-    console.log(userInput);
+// 세션세팅
+app.use(
+  expressSession({
+    secret: "my key",
+    resave: true,
+    saveUninitialized: true,
+  })
+);
+
+app.get('/homepage', (req, res) => {
+  return res.sendFile(__dirname + "/src/html/ex.html");
 })
 
+
+app.get('/', (req, res) => {
+    if(req.session.user){
+      return res.redirect("/homepage");
+    }
+    const userInput = req.body;
+    console.log(userInput);
+    return res.sendFile(__dirname + "/src/html/home.html");
+})
+
+
+
 app.get('/signup', (req, res) => {
-    res.sendFile(__dirname + "/src/html/signup.html");
+    if(req.session.user){
+      return res.redirect("/login");
+    }
+    return res.sendFile(__dirname + "/src/html/signup.html");
 })
 
 app.post('/signup', (req, res) =>{
@@ -34,11 +59,11 @@ app.post('/signup', (req, res) =>{
     })
 
     console.log(req.body.id);
-    res.sendStatus(200);
+    return res.sendStatus(200);
 })
 
 app.get('/login', (req, res) => {
-    res.sendFile(__dirname + "/src/html/login.html");
+    return res.sendFile(__dirname + "/src/html/login.html");
 })
 
 app.post('/login', (req, res) => {
@@ -55,11 +80,12 @@ app.post('/login', (req, res) => {
                 if (err) throw err;
                 if(result) {
                     console.log('login 성공');
-                    return res.status(200).send('login 성공');
+                    req.session.user = result;
+                    return res.status(200).send('success');
                 }
                 else {
                     console.log('로그인 실패(비밀번호 불일치)');
-                    return res.status(200).send('login 실패');
+                    return res.status(200).send('fail');
                 }
             })
          }
