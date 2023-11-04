@@ -4,6 +4,7 @@ const models = require("./models");
 const bcrypt = require('bcrypt');
 const cookieParser = require("cookie-parser");
 const expressSession = require('express-session');
+const cors = require('cors');
 const PORT = '3000';
 
 const app = express();
@@ -18,6 +19,7 @@ const sequelize = new Sequelize('database', 'username', 'password', {
 });
 
 app.use(express.json());
+app.use(cors());
 app.use(express.static(__dirname + '/src')); // 정적 파일 서비스**
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -186,6 +188,43 @@ app.get("/delete/:id", (req, res) => {
     }
     else {
       return res.status(200).send("fail");
+    }
+  })
+})
+
+app.get("/boardUpdate/:id", (req, res) => {
+  return res.sendFile(__dirname + "/src/html/boardUpdate.html");
+})
+
+app.get("/loadDatabase/:id", (req, res) => {
+  const id = req.params.id;
+  models.Board.findOne({
+    where: {
+      id: id
+    }
+  })
+  .then(foundData => {
+    if(foundData) {
+      return res.json(foundData);
+    }
+    else {
+      return res.status(404).send("데이터를 찾을 수 없습니다.");
+    }
+  })
+})
+
+app.get("/boardUpdate/api/:id" , (req, res) => {
+  const id = req.params.id;
+  const updateData = req.body;
+  models.Board.update(updateData, {
+    where: {
+      id: id
+    }
+  })
+  .then(updatedRows => {
+    if(updatedRows > 0){
+      return res.json({ success: true, message: "success" });
+      
     }
   })
 })

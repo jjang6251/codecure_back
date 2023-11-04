@@ -5,7 +5,8 @@ const postId = pathArray[pathArray.length - 1];
 const title = document.querySelector("#title");
 const content = document.querySelector("#content");
 const count = document.querySelector("#count");
-const deleteButton = document.querySelector("button");
+const deleteButton = document.querySelector("#delete");
+const updateButton = document.querySelector("#update");
 
 fetch(`/boardList/${postId}/api`)
 .then(response => response.json())
@@ -27,8 +28,12 @@ deleteButton.addEventListener("click", () => {
     })
     .then((data)=> {
         alert(data);
-        if("success" === data){
+        if(data === "success"){
             window.location.href = "/boardList";
         }
     })  
+})
+
+updateButton.addEventListener("click", () => {
+    window.location.href = `/boardUpdate/${postId}`;
 })

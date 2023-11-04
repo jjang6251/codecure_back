@@ -8,7 +8,7 @@
     posts.forEach(post => {
         const row = document.createElement("tr");
         const cellId = document.createElement("td");
-        const cellContent = document.createElement("td");
+        const cellTitle = document.createElement("td");
         const contentLink = document.createElement("a");
         const cellCount = document.createElement("td");
         const id = post.id;
@@ -17,10 +17,10 @@
         cellId.textContent = post.id;
         row.appendChild(cellId);
 
-        contentLink.textContent = post.content;
+        contentLink.textContent = post.title;
         contentLink.href = `boardList/${id}`
-        cellContent.appendChild(contentLink);
-        row.appendChild(cellContent);
+        cellTitle.appendChild(contentLink);
+        row.appendChild(cellTitle);
 
 
         cellCount.textContent = post.count;
