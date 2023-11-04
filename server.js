@@ -33,6 +33,13 @@ app.use(
   })
 );
 
+app.use('/boardList', (req, res, next) => {
+  // Cache-Control 헤더를 설정하여 캐싱을 비활성화합니다.
+  res.setHeader('Cache-Control', 'no-store, max-age=0');
+  // 다음 미들웨어로 전달합니다.
+  next();
+}); //특정 주소에 대해 항상 리프레쉬 진행;
+
 app.get('/homepage', (req, res) => {
   return res.sendFile(__dirname + "/src/html/ex.html");
 })
@@ -88,7 +95,7 @@ app.post('/login', (req, res) => {
                 if(result) {
                     console.log('login 성공');
                     req.session.user = result;
-                    req.session.userid = req.body.id
+                    req.session.userid = req.body.id;
                     return res.status(200).send('success');
                 }
                 else {
@@ -128,6 +135,31 @@ app.get("/boardWrite", (req, res) => {
   }
 });
 
+app.get("/boardList/:id", (req, res) => {
+  return res.sendFile(__dirname + "/src/html/boardDetail.html");
+})
+
+app.get("/boardList/:id/api", (req, res) => {
+  const id = req.params.id;
+  console.log(id);
+  models.Board.findOne({
+    where: {
+      id: id
+    }
+  })
+  .then(foundData => {
+    if (foundData){
+      foundData.count += 1;
+      models.Board.update({ count: foundData.count }, // 업데이트할 값
+      { where: { id: id } })
+      console.log(foundData);
+      return res.json(foundData);
+    } else {
+      return res.status(404).send("데이터를 찾을 수 없습니다.");
+    }
+  })
+})
+
 app.post("/boardWrite", (req, res) => {
   if(req.session.user){
     console.log(req.body);
@@ -139,6 +171,23 @@ app.post("/boardWrite", (req, res) => {
     })
   }
 
+})
+
+app.get("/delete/:id", (req, res) => {
+  const id = req.params.id;
+  models.Board.destroy({
+    where: {
+      id: id
+    }
+  })
+  .then(deletedRows => {
+    if(deletedRows > 0) {
+      return res.status(200).send("success");
+    }
+    else {
+      return res.status(200).send("fail");
+    }
+  })
 })
 
 app.use((err, req, res, next) => {

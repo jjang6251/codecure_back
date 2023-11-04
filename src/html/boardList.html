@@ -17,8 +17,9 @@
         .post {
             margin-bottom: 20px;
         }
-        li {
-            list-style-type: none;
+        
+        a {
+            text-decoration: none;
         }
     </style>
 </head>
@@ -28,14 +29,22 @@
         <a href="/boardWrite">게시판 작성</a>
         <!-- 게시글 목록 -->
         <h2>게시글 목록</h2>
-        <ul id="post-list">
+        <!-- <ul id="post-list">
             <!-- 게시글이 여기에 동적으로 추가됩니다. -->
-        </ul>
+        <!-- </ul> -->
         
-        <!-- 선택된 게시글의 상세 내용 -->
-        <div id="post-detail">
-            <!-- 게시글의 상세 내용이 여기에 동적으로 표시됩니다. -->
-        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th style="width: 500px">title</th>
+                    <th>count</th>
+                </tr>
+            </thead>
+            <tbody id="post-list">
+                
+            </tbody>
+        </table>
     </div>
 
     <script type="text/javascript" src="../js/boardList.js"></script>

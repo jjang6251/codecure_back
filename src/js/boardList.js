@@ -1,29 +1,42 @@
  // 게시글 목록 데이터 (가상 데이터)
- const postList = document.getElementById("post-list");
- const postDetail = document.getElementById("post-detail");
+ const postList = document.querySelector("#post-list");
 
  fetch('/boardList/api')
  .then(response => response.json())
  .then(data => {
     const posts = data.posts;
     posts.forEach(post => {
-        const listItem = document.createElement("li");
-        listItem.textContent = post.title;
-        listItem.addEventListener("click", () => {
-            // 선택한 게시글의 상세 내용을 표시합니다.
-            showPostDetail(post);
-        });
-        postList.appendChild(listItem);
+        const row = document.createElement("tr");
+        const cellId = document.createElement("td");
+        const cellContent = document.createElement("td");
+        const contentLink = document.createElement("a");
+        const cellCount = document.createElement("td");
+        const id = post.id;
+
+
+        cellId.textContent = post.id;
+        row.appendChild(cellId);
+
+        contentLink.textContent = post.content;
+        contentLink.href = `boardList/${id}`
+        cellContent.appendChild(contentLink);
+        row.appendChild(cellContent);
+
+
+        cellCount.textContent = post.count;
+        row.appendChild(cellCount);
+        
+        postList.appendChild(row);
+        
     });
  });
 
- // 게시글 목록을 동적으로 생성합니다.
- 
+ const tbodyElement = document.querySelector('tbody');
 
- // 선택한 게시글의 상세 내용을 표시하는 함수
- function showPostDetail(post) {
-     postDetail.innerHTML = `
-         <h2>${post.title}</h2>
-         <p>${post.content}</p>
-     `;
- }
+//  tbodyElement.addEventListener('click', (event) => {
+//    const clickedItem = event.target;
+//    if (clickedItem.tagName === 'td') {
+//      const postId = clickedItem.dataset.id;
+//      window.location.href = `/boardList/${postId}`;
+//    }
+//  });
