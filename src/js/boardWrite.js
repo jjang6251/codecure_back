@@ -49,7 +49,7 @@ postForm.addEventListener("submit", function(event) {
     console.log(request);
     // 폼 초기화
     postForm.reset();
-    
+    window.location.href = "/boardList";
     
 });
 

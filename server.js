@@ -44,14 +44,14 @@ app.use('/boardList', (req, res, next) => {
 
 app.get('/homepage', (req, res) => {
   return res.sendFile(__dirname + "/src/html/ex.html");
-})
+});
 
 
 app.get('/', (req, res) => {
     const userInput = req.body;
     console.log(userInput);
     return res.sendFile(__dirname + "/src/html/home.html");
-})
+});
 
 
 
@@ -60,7 +60,7 @@ app.get('/signup', (req, res) => {
       return res.redirect("/login");
     }
     return res.sendFile(__dirname + "/src/html/signup.html");
-})
+});
 
 app.post('/signup', (req, res) =>{
     const saltRounds = 10;
@@ -76,11 +76,11 @@ app.post('/signup', (req, res) =>{
 
     console.log(req.body.id);
     return res.sendStatus(200);
-})
+});
 
 app.get('/login', (req, res) => {
     return res.sendFile(__dirname + "/src/html/login.html");
-})
+});
 
 app.post('/login', (req, res) => {
     console.log(req.body);
@@ -111,11 +111,11 @@ app.post('/login', (req, res) => {
             return res.status(404).send('해당하는 ID를 찾을 수 없습니다.');
           }
         })
-})
+});
 
 app.get("/boardList", (req, res) => {
   return res.sendFile(__dirname + "/src/html/boardList.html");
-})
+});
 
 app.get('/boardList/api', async (req, res) => {
   try {
@@ -139,7 +139,7 @@ app.get("/boardWrite", (req, res) => {
 
 app.get("/boardList/:id", (req, res) => {
   return res.sendFile(__dirname + "/src/html/boardDetail.html");
-})
+});
 
 app.get("/boardList/:id/api", (req, res) => {
   const id = req.params.id;
@@ -160,7 +160,7 @@ app.get("/boardList/:id/api", (req, res) => {
       return res.status(404).send("데이터를 찾을 수 없습니다.");
     }
   })
-})
+});
 
 app.post("/boardWrite", (req, res) => {
   if(req.session.user){
@@ -173,7 +173,7 @@ app.post("/boardWrite", (req, res) => {
     })
   }
 
-})
+});
 
 app.get("/delete/:id", (req, res) => {
   const id = req.params.id;
@@ -190,15 +190,15 @@ app.get("/delete/:id", (req, res) => {
       return res.status(200).send("fail");
     }
   })
-})
+});
 
 app.get("/boardUpdate/:id", (req, res) => {
   return res.sendFile(__dirname + "/src/html/boardUpdate.html");
 })
 
-app.get("/loadDatabase/:id", (req, res) => {
+app.get("/loadDatabase/:id", async (req, res) => {
   const id = req.params.id;
-  models.Board.findOne({
+  await models.Board.findOne({
     where: {
       id: id
     }
@@ -210,29 +210,32 @@ app.get("/loadDatabase/:id", (req, res) => {
     else {
       return res.status(404).send("데이터를 찾을 수 없습니다.");
     }
-  })
-})
-
-app.get("/boardUpdate/api/:id" , (req, res) => {
-  const id = req.params.id;
-  const updateData = req.body;
-  models.Board.update(updateData, {
-    where: {
-      id: id
-    }
-  })
-  .then(updatedRows => {
-    if(updatedRows > 0){
-      return res.json({ success: true, message: "success" });
-      
-    }
-  })
-})
-
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    return res.status(500).send('Something went wrong!');
   });
+});
+
+app.post("/boardUpdate/api/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const updateData = req.body;
+
+    // 비동기적으로 데이터베이스 업데이트를 수행
+    const updatedRows = await models.Board.update(updateData, {
+      where: {
+        id: id
+      }
+    });
+
+    if (updatedRows > 0) {
+      res.status(200).send("Success"); 
+    } else {
+      return res.status(404).send("Not found"); // 업데이트된 행이 없을 경우 처리할 내용
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send("Internal Server Error"); // 에러 발생 시 처리할 내용
+  }
+});
+
 
   
 

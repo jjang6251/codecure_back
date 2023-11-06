@@ -32,8 +32,8 @@ deleteButton.addEventListener("click", () => {
             window.location.href = "/boardList";
         }
     })  
-})
+});
 
 updateButton.addEventListener("click", () => {
     window.location.href = `/boardUpdate/${postId}`;
-})
+});
