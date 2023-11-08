@@ -20,5 +20,6 @@ function signup(){
         },
         body: JSON.stringify(request),
     });
+    
     window.location.href = "/";
 }

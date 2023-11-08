@@ -171,7 +171,7 @@ app.post("/boardWrite", (req, res) => {
       count: 0,
       User: req.session.userid
     })
-  }
+  } 
 
 });
 
