@@ -121,7 +121,6 @@ app.get('/boardList/api', async (req, res) => {
   try {
     // 데이터베이스에서 게시글 정보 조회
     const posts = await models.Board.findAll();
-    console.log(posts);
 
     // 클라이언트로 HTML 파일과 게시글 정보를 전달
     res.json({ posts });
@@ -143,7 +142,6 @@ app.get("/boardList/:id", (req, res) => {
 
 app.get("/boardList/:id/api", (req, res) => {
   const id = req.params.id;
-  console.log(id);
   models.Board.findOne({
     where: {
       id: id
@@ -154,7 +152,6 @@ app.get("/boardList/:id/api", (req, res) => {
       foundData.count += 1;
       models.Board.update({ count: foundData.count }, // 업데이트할 값
       { where: { id: id } })
-      console.log(foundData);
       return res.json(foundData);
     } else {
       return res.status(404).send("데이터를 찾을 수 없습니다.");
@@ -164,7 +161,6 @@ app.get("/boardList/:id/api", (req, res) => {
 
 app.post("/boardWrite", (req, res) => {
   if(req.session.user){
-    console.log(req.body);
     models.Board.create({
       title: req.body.title,
       content: req.body.content,
@@ -205,7 +201,7 @@ app.get("/loadDatabase/:id", async (req, res) => {
   })
   .then(foundData => {
     if(foundData) {
-      return res.json(foundData);
+      return res.json(foundData); 
     }
     else {
       return res.status(404).send("데이터를 찾을 수 없습니다.");
@@ -236,7 +232,42 @@ app.post("/boardUpdate/api/:id", async (req, res) => {
   }
 });
 
+app.post("/comment/:id", async (req, res) => {
+  console.log(req.body);
+  if (req.session.user) {
+    try {
+      await models.Comment.create({
+        comment_user_id: req.session.userid,
+        comment_content: req.body.comment,
+        comment_board_id: req.params.id,
+        parent_comment_id: null,
+      });
+      return res.status(200).send("comment success");
+    } catch (error) {
+      console.error("Error creating comment:", error);
+      return res.status(500).send("internal server error");
+    }
+  } else {
+    return res.status(200).send("please login");
+  }
+});
 
+app.get(`/commentList/:id`, (req, res) => {
+  models.Comment.findAll({
+    where: {
+      comment_board_id: req.params.id
+    }
+  })
+  .then(foundData => {
+    console.log(foundData);
+    if(foundData){
+      return res.json(foundData);
+    }
+    else {
+      return res.json({message:"댓글이 없습니다"});
+    }
+  })
+})
   
 
 
