@@ -1,4 +1,12 @@
 const singup = document.querySelector("#signup");
 const login = document.querySelector("#login");
+const logout = document.querySelector("#logout");
 
-singup.addEventListener("click", )
+logout.addEventListener("click", () => {
+    console.log('click');
+    fetch("/logout")
+    .then(response => response.text())
+    .then(data => {
+        alert(data);
+    })
+})

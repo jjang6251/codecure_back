@@ -1,34 +1,34 @@
-<mxfile host="app.diagrams.net" modified="2023-11-07T03:31:22.304Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36" etag="_3txUc9waLMp6sMmyGty" version="22.0.8" type="github">
+<mxfile host="Electron" modified="2023-11-15T13:08:36.728Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.0.3 Chrome/114.0.5735.289 Electron/25.8.4 Safari/537.36" etag="oZbgVpgZxFVhEiIjf_JF" version="22.0.3" type="device">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
-    <mxGraphModel dx="1221" dy="737" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1100" dy="809" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
-        <mxCell id="DdtnG8coqytSgWlLhSMR-16" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="DdtnG8coqytSgWlLhSMR-16" value="" style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="30" y="330" width="240" height="250" as="geometry" />
         </mxCell>
-        <mxCell id="DdtnG8coqytSgWlLhSMR-8" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="DdtnG8coqytSgWlLhSMR-8" value="" style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="520" y="180" width="270" height="220" as="geometry" />
         </mxCell>
-        <mxCell id="DdtnG8coqytSgWlLhSMR-1" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="DdtnG8coqytSgWlLhSMR-1" value="" style="rounded=1;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="20" y="30" width="190" height="180" as="geometry" />
         </mxCell>
-        <mxCell id="DdtnG8coqytSgWlLhSMR-0" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;&amp;lt;회원가입&amp;gt;&lt;br&gt;id : 아이디&lt;br&gt;password: 비밀번호&lt;br&gt;std_id: 학번(한번만)&lt;br&gt;name: 이름&lt;br&gt;is_Member: 코큐 멤버&lt;br&gt;is_superUser: 관리&lt;br&gt;&lt;br&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="DdtnG8coqytSgWlLhSMR-0" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;&amp;lt;회원가입&amp;gt;&lt;br&gt;id : 아이디&lt;br&gt;password: 비밀번호&lt;br&gt;std_id: 학번(한번만)&lt;br&gt;name: 이름&lt;br&gt;is_Member: 코큐 멤버&lt;br&gt;is_superUser: 관리&lt;br&gt;&lt;br&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="20" y="10" width="190" height="240" as="geometry" />
         </mxCell>
-        <mxCell id="DdtnG8coqytSgWlLhSMR-2" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;id: (char)&lt;br&gt;password: (char - hash)&lt;br&gt;std_id: (int)&lt;br&gt;name: (char)&lt;br&gt;is_Member: boolean(false)&lt;br&gt;is_superUser: boolean(false&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="DdtnG8coqytSgWlLhSMR-2" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;id: (char)&lt;br&gt;password: (char - hash)&lt;br&gt;std_id: (int)&lt;br&gt;name: (char)&lt;br&gt;is_Member: boolean(false)&lt;br&gt;is_superUser: boolean(false&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="240" y="10" width="200" height="220" as="geometry" />
         </mxCell>
-        <mxCell id="DdtnG8coqytSgWlLhSMR-7" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;&amp;lt;관리자 페이지(admin)&amp;gt;&lt;br&gt;회원가입 시 is_Member = True 부여&lt;br&gt;회원가입 시 is_superUser = True 부여&lt;br&gt;&lt;br&gt;게시판 관리 및 공지 쓰기&lt;br&gt;-&amp;gt; 삭제 가능.&lt;br&gt;&lt;br&gt;회원 관리(삭제 기능)&lt;br&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="DdtnG8coqytSgWlLhSMR-7" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;&amp;lt;관리자 페이지(admin)&amp;gt;&lt;br&gt;회원가입 시 is_Member = True 부여&lt;br&gt;회원가입 시 is_superUser = True 부여&lt;br&gt;&lt;br&gt;게시판 관리 및 공지 쓰기&lt;br&gt;-&amp;gt; 삭제 가능.&lt;br&gt;&lt;br&gt;회원 관리(삭제 기능)&lt;br&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="540" y="140" width="240" height="300" as="geometry" />
         </mxCell>
-        <mxCell id="DdtnG8coqytSgWlLhSMR-11" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;exitX=1.016;exitY=0.813;exitDx=0;exitDy=0;exitPerimeter=0;entryX=-0.011;entryY=0.619;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="DdtnG8coqytSgWlLhSMR-0" target="DdtnG8coqytSgWlLhSMR-8">
+        <mxCell id="DdtnG8coqytSgWlLhSMR-11" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;exitX=1.016;exitY=0.813;exitDx=0;exitDy=0;exitPerimeter=0;entryX=-0.011;entryY=0.619;entryDx=0;entryDy=0;entryPerimeter=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="DdtnG8coqytSgWlLhSMR-0" target="DdtnG8coqytSgWlLhSMR-8" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="320" y="310" as="sourcePoint" />
             <mxPoint x="370" y="260" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="DdtnG8coqytSgWlLhSMR-12" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;&amp;lt;게시판&amp;gt;&lt;br&gt;boardType: 게시판 종류&lt;br&gt;boardTItle: 제목&lt;br&gt;boardContent: 내용,&lt;br&gt;boardId: 글쓴이 id 저장&lt;br&gt;boardCount: 조회수&lt;br&gt;&lt;br&gt;&lt;br&gt;-게시판 작성은 멤버만 가능&lt;br&gt;- 수정은 글쓴이만&lt;br&gt;-&amp;nbsp; 삭제는 글쓴이, 관리자 가능&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+        <mxCell id="DdtnG8coqytSgWlLhSMR-12" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;&amp;lt;게시판&amp;gt;&lt;br&gt;boardType: 게시판 종류&lt;br&gt;boardTItle: 제목&lt;br&gt;boardContent: 내용,&lt;br&gt;boardId: 글쓴이 id 저장&lt;br&gt;boardCount: 조회수&lt;br&gt;&lt;br&gt;&lt;br&gt;-게시판 작성은 멤버만 가능&lt;br&gt;- 수정은 글쓴이만&lt;br&gt;-&amp;nbsp; 삭제는 글쓴이, 관리자 가능&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
           <mxGeometry x="40" y="360" width="220" height="190" as="geometry" />
         </mxCell>
       </root>

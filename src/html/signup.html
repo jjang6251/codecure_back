@@ -1,28 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원가입</title>
-    <link rel="stylesheet", href="https://unpkg.com/mvp.css">
-    <style>
-        label {
-            display: block;
-        }
-        span{
-            display: inline-block;
-        }
-        input {
-            display: inline-block;
-        }
-    </style>
+    <title>Document</title>
 </head>
+
 <body>
-    아이디:  <input id="id" type="id" placeholder="대소문자 8글자", required><br>
-    비밀번호:  <input id="password" type="password" placeholder="pw", required><br>
-    이름:   <input id="username" type="text" placeholder="name", required><br>
-    <button>제출</button>
-    
+    <input type="file" onchange="readExcel()"><br>
+    <input type="button" id="deleteAll" value="명단 삭제"></input>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
+
+    <script>
+        function readExcel() {
+            let input = event.target;
+            let reader = new FileReader();
+            reader.onload = function () {
+                let data = reader.result;
+                let workBook = XLSX.read(data, { type: 'binary' });
+                workBook.SheetNames.forEach(function (sheetName) {
+                    console.log('SheetName: ' + sheetName);
+                    let rows = XLSX.utils.sheet_to_json(workBook.Sheets[sheetName]);
+                    console.log(JSON.stringify(rows));
+                    fetch("/memSignup", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(rows),
+                    })
+                        .then(response => response.text())
+                        .then(data => {
+                            alert(data);
+                        })
+                        .catch(error => console.error('Error:', error));
+                })
+            };
+            reader.readAsBinaryString(input.files[0]);
+        }
+    </script>
     <script type="text/javascript" src="../js/signup.js"></script>
 </body>
+
 </html>

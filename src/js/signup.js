@@ -1,25 +1,17 @@
-const id =  document.querySelector("#id");
-const password =  document.querySelector("#password");
-const username =  document.querySelector("#username");
-const signupButton = document.querySelector("button");
+const deleteAll = document.querySelector("#deleteAll");
 
-signupButton.addEventListener("click", signup);
+deleteAll.addEventListener("click", () => {
+    const userconfirm = confirm('진짜로 명단을 모두 삭제하시겠습니까?');
 
-function signup(){
-    const request = {
-        id : id.value,
-        password: password.value,
-        username: username.value,
-    };
-    console.log(request);
 
-    fetch("/signup", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(request),
-    });
+    if(userconfirm){
+        fetch("/memSignup/deleteAll")
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
     
-    window.location.href = "/";
-}
+});

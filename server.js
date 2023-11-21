@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const cookieParser = require("cookie-parser");
 const expressSession = require('express-session');
 const cors = require('cors');
-const PORT = '3000';
+const PORT = '5000';
 
 const app = express();
 
@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static(__dirname + '/src')); // 정적 파일 서비스**
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 //URL을 통해 전달되는 데이터에 한글,공백 등과 같은 문자가 포함될 경우 제대로 인식되지 않는 문제 해결
 app.use(cookieParser());
 
@@ -48,76 +48,181 @@ app.get('/homepage', (req, res) => {
 
 
 app.get('/', (req, res) => {
-    const userInput = req.body;
-    console.log(userInput);
-    return res.sendFile(__dirname + "/src/html/home.html");
+  const userInput = req.body;
+  console.log(userInput);
+  return res.sendFile(__dirname + "/src/html/home.html");
 });
 
 
 
 app.get('/signup', (req, res) => {
-    if(req.session.user){
-      return res.redirect("/login");
-    }
-    return res.sendFile(__dirname + "/src/html/signup.html");
+  if (req.session.user) {
+    return res.redirect("/login");
+  }
+  return res.sendFile(__dirname + "/src/html/signup.html");
 });
 
-app.post('/signup', (req, res) =>{
-    const saltRounds = 10;
-    const password = req.body.password;
-    bcrypt.hash(password, saltRounds, function(err, hashed_password){
-        if(err) throw err;
-        models.User.create({
-            user_name: req.body.username,
-            user_id: req.body.id,
-            user_password: hashed_password,
-        })
-    })
+// app.post('/signup', (req, res) =>{ //signup api
+//     const saltRounds = 10;
+//     const password = req.body.password;
+//     bcrypt.hash(password, saltRounds, function(err, hashed_password){
+//         if(err) throw err;
+//         models.User.create({
+//             user_name: req.body.username,
+//             user_id: req.body.id,
+//             user_password: hashed_password,
+//         })
+//     })
 
-    console.log(req.body.id);
-    return res.sendStatus(200);
+//     console.log(req.body.id);
+//     return res.sendStatus(200);
+// });
+
+app.post('/memSignup', (req, res) => {
+
+  models.codecureMem.findAll()
+    .then((records) => {
+      if (records.length > 0) {
+        return res.status(200).send('이미 명단이 있습니다!');
+      } else {
+        const receivedData = req.body;
+        const saltRounds = 10;
+        for (let i = 0; i < receivedData.length; i++) {
+          const currentArray = receivedData[i];
+          if (currentArray.role == "임원") {
+            currentArray.is_admin = true;
+          }
+          else
+            currentArray.is_admin = false;
+          const password = String(currentArray.stdid);
+          bcrypt.hash(password, saltRounds, function (err, hashed_password) {
+            if (err) throw err;
+            models.codecureMem.create({
+              major: currentArray.major,
+              stdid: currentArray.stdid,
+              grade: currentArray.grade,
+              name: currentArray.name,
+              role: currentArray.role,
+              password: hashed_password,
+              is_admin: currentArray.is_admin
+            })
+
+          })
+
+        }
+        return res.status(200).send('명단이 생성되었습니다.');
+      }
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+
+
+
+});
+
+app.get('/memSignup/deleteAll', (req, res) => {
+  models.codecureMem.findOne({
+    where: {
+      stdid: req.session.stdid
+    }
+  })
+    .then(foundData => {
+      if (foundData) {
+        if (foundData.is_admin == 1) {
+          models.codecureMem.destroy({
+            where: {},
+            truncate: true
+          })
+          return res.status(200).send('명단이 모두 초기화되었습니다.');
+        }
+      } else {
+        return res.status(200).send('명단을 삭제할 권한이 없습니다.');
+      }
+
+    })
+});
+
+app.get('/modMem', (req, res) => {
+  if (req.session.user) {
+    return res.sendFile(__dirname + "/src/html/modifyMem.html");
+  }
+});
+
+// app.post('/modifyMem', (req, res) => {
+//   const newPassword = req.body;
+//   bcrypt.hash(newPassword.password, saltRounds, function(err, hashed_password){
+//             if(err) throw err;
+//             models.User.create({
+//                 user_name: req.body.username,
+//                 user_id: req.body.id,
+//                 user_password: hashed_password,
+//             })
+//         })
+  
+//   if (updatedRows > 0) {
+//     res.status(200).send("Success");
+//   } else {
+//     return res.status(404).send("Not found"); // 업데이트된 행이 없을 경우 처리할 내용
+//   }
+// } catch (error) {
+//   console.error(error);
+//   return res.status(500).send("Internal Server Error"); // 에러 발생 시 처리할 내용
+// }
+// })
+
+
+app.get('/logout', (req, res) => {
+  // 세션을 삭제하거나 만료시킴
+  req.session.destroy(err => {
+    if (err) {
+      console.error('세션 삭제 실패:', err);
+      return res.status(500).send('세션 삭제 실패');
+    }
+    res.status(200).send('로그아웃 되었습니다.');
+  });
 });
 
 app.get('/login', (req, res) => {
-    return res.sendFile(__dirname + "/src/html/login.html");
+  return res.sendFile(__dirname + "/src/html/login.html");
 });
 
-app.post('/login', (req, res) => {
-    console.log(req.body);
-    const response_password = req.body.password;
-    models.User.findOne({
-        where: {
-          user_id: req.body.id
-        }
-      })
-        .then(foundData => {
-          if (foundData) {
-            bcrypt.compare(response_password, foundData.user_password, function(err, result){
-                if (err) throw err;
-                if(result) {
-                    console.log('login 성공');
-                    req.session.user = result;
-                    req.session.userid = req.body.id;
-                    return res.status(200).send('success');
-                }
-                else {
-                    console.log('로그인 실패(비밀번호 불일치)');
-                    return res.status(200).send('fail');
-                }
-            })
-         }
+app.post('/login', (req, res) => { //login api
+  console.log(req.body);
+  const response_password = req.body.password;
+  models.codecureMem.findOne({
+    where: {
+      stdid: req.body.id
+    }
+  })
+    .then(foundData => {
+      if (foundData) {
+        bcrypt.compare(response_password, foundData.password, function (err, result) {
+          if (err) throw err;
+          if (result) {
+            console.log('login 성공');
+            req.session.user = result;
+            req.session.stdid = req.body.id;
+            return res.status(200).send('success');
+          }
           else {
-            console.log('해당하는 id를 찾을 수 없습니다.');
-            return res.status(404).send('해당하는 ID를 찾을 수 없습니다.');
+            console.log('로그인 실패(비밀번호 불일치)');
+            return res.status(200).send('fail');
           }
         })
+      }
+      else {
+        console.log('해당하는 id를 찾을 수 없습니다.');
+        return res.status(404).send('해당하는 ID를 찾을 수 없습니다.');
+      }
+    })
 });
 
 app.get("/boardList", (req, res) => {
   return res.sendFile(__dirname + "/src/html/boardList.html");
 });
 
-app.get('/boardList/api', async (req, res) => {
+app.get('/boardList/api', async (req, res) => { //bordList api
   try {
     // 데이터베이스에서 게시글 정보 조회
     const posts = await models.Board.findAll();
@@ -131,7 +236,7 @@ app.get('/boardList/api', async (req, res) => {
 });
 
 app.get("/boardWrite", (req, res) => {
-  if(req.session.user){
+  if (req.session.user) {
     return res.sendFile(__dirname + "/src/html/boardWrite.html");
   }
 });
@@ -140,52 +245,52 @@ app.get("/boardList/:id", (req, res) => {
   return res.sendFile(__dirname + "/src/html/boardDetail.html");
 });
 
-app.get("/boardList/:id/api", (req, res) => {
+app.get("/boardList/:id/api", (req, res) => { //boardList에서 Detail로 가는 api
   const id = req.params.id;
   models.Board.findOne({
     where: {
       id: id
     }
   })
-  .then(foundData => {
-    if (foundData){
-      foundData.count += 1;
-      models.Board.update({ count: foundData.count }, // 업데이트할 값
-      { where: { id: id } })
-      return res.json(foundData);
-    } else {
-      return res.status(404).send("데이터를 찾을 수 없습니다.");
-    }
-  })
+    .then(foundData => {
+      if (foundData) {
+        foundData.count += 1;
+        models.Board.update({ count: foundData.count }, // 업데이트할 값
+          { where: { id: id } })
+        return res.json(foundData);
+      } else {
+        return res.status(404).send("데이터를 찾을 수 없습니다.");
+      }
+    })
 });
 
-app.post("/boardWrite", (req, res) => {
-  if(req.session.user){
+app.post("/boardWrite", (req, res) => { //게시글 작성 api
+  if (req.session.user) {
     models.Board.create({
       title: req.body.title,
       content: req.body.content,
       count: 0,
       User: req.session.userid
     })
-  } 
+  }
 
 });
 
-app.get("/delete/:id", (req, res) => {
+app.get("/delete/:id", (req, res) => { //게시글 삭제 api
   const id = req.params.id;
   models.Board.destroy({
     where: {
       id: id
     }
   })
-  .then(deletedRows => {
-    if(deletedRows > 0) {
-      return res.status(200).send("success");
-    }
-    else {
-      return res.status(200).send("fail");
-    }
-  })
+    .then(deletedRows => {
+      if (deletedRows > 0) {
+        return res.status(200).send("success");
+      }
+      else {
+        return res.status(200).send("fail");
+      }
+    })
 });
 
 app.get("/boardUpdate/:id", (req, res) => {
@@ -199,14 +304,14 @@ app.get("/loadDatabase/:id", async (req, res) => {
       id: id
     }
   })
-  .then(foundData => {
-    if(foundData) {
-      return res.json(foundData); 
-    }
-    else {
-      return res.status(404).send("데이터를 찾을 수 없습니다.");
-    }
-  });
+    .then(foundData => {
+      if (foundData) {
+        return res.json(foundData);
+      }
+      else {
+        return res.status(404).send("데이터를 찾을 수 없습니다.");
+      }
+    });
 });
 
 app.post("/boardUpdate/api/:id", async (req, res) => {
@@ -222,7 +327,7 @@ app.post("/boardUpdate/api/:id", async (req, res) => {
     });
 
     if (updatedRows > 0) {
-      res.status(200).send("Success"); 
+      res.status(200).send("Success");
     } else {
       return res.status(404).send("Not found"); // 업데이트된 행이 없을 경우 처리할 내용
     }
@@ -258,17 +363,17 @@ app.get(`/commentList/:id`, (req, res) => {
       comment_board_id: req.params.id
     }
   })
-  .then(foundData => {
-    console.log(foundData);
-    if(foundData){
-      return res.json(foundData);
-    }
-    else {
-      return res.json({message:"댓글이 없습니다"});
-    }
-  })
+    .then(foundData => {
+      console.log(foundData);
+      if (foundData) {
+        return res.json(foundData);
+      }
+      else {
+        return res.json({ message: "댓글이 없습니다" });
+      }
+    })
 })
-  
 
 
-app.listen(PORT, () => console.log('3000 port connected'));
+
+app.listen(PORT, () => console.log(`${PORT}port connected`));
