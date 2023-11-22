@@ -42,7 +42,7 @@ app.use('/boardList', (req, res, next) => {
   next();
 }); //특정 주소에 대해 항상 리프레쉬 진행;
 
-app.get('/homepage', (req, res) => {
+app.get('/homepage', (req, res) => { //home url
   return res.sendFile(__dirname + "/src/html/ex.html");
 });
 
@@ -55,7 +55,7 @@ app.get('/', (req, res) => {
 
 
 
-app.get('/signup', (req, res) => {
+app.get('/signup', (req, res) => { //회원가입 페이지
   if (req.session.user) {
     return res.redirect("/login");
   }
@@ -78,7 +78,7 @@ app.get('/signup', (req, res) => {
 //     return res.sendStatus(200);
 // });
 
-app.post('/memSignup', (req, res) => {
+app.post('/memSignup', (req, res) => { //admin페이지 전용
 
   models.codecureMem.findAll()
     .then((records) => {
@@ -121,7 +121,7 @@ app.post('/memSignup', (req, res) => {
 
 });
 
-app.get('/memSignup/deleteAll', (req, res) => {
+app.get('/memSignup/deleteAll', (req, res) => { //admin 페이지 전용
   models.codecureMem.findOne({
     where: {
       stdid: req.session.stdid
@@ -143,7 +143,7 @@ app.get('/memSignup/deleteAll', (req, res) => {
     })
 });
 
-app.get('/modMem', (req, res) => {
+app.get('/modMem', (req, res) => { //admin 회원정보
   if (req.session.user) {
     return res.sendFile(__dirname + "/src/html/modifyMem.html");
   }
@@ -172,7 +172,7 @@ app.get('/modMem', (req, res) => {
 // })
 
 
-app.get('/logout', (req, res) => {
+app.get('/logout', (req, res) => { //로그아웃api
   // 세션을 삭제하거나 만료시킴
   req.session.destroy(err => {
     if (err) {
@@ -183,7 +183,7 @@ app.get('/logout', (req, res) => {
   });
 });
 
-app.get('/login', (req, res) => {
+app.get('/login', (req, res) => { //admin 로그인
   return res.sendFile(__dirname + "/src/html/login.html");
 });
 
@@ -218,11 +218,11 @@ app.post('/login', (req, res) => { //login api
     })
 });
 
-app.get("/boardList", (req, res) => {
+app.get("/boardList", (req, res) => { //admin 페이지
   return res.sendFile(__dirname + "/src/html/boardList.html");
 });
 
-app.get('/boardList/api', async (req, res) => { //bordList api
+app.get('/boardList/api', async (req, res) => { //bordList api(모든 게시글)
   try {
     // 데이터베이스에서 게시글 정보 조회
     const posts = await models.Board.findAll();
@@ -235,13 +235,13 @@ app.get('/boardList/api', async (req, res) => { //bordList api
   }
 });
 
-app.get("/boardWrite", (req, res) => {
+app.get("/boardWrite", (req, res) => { //admin 게시글 작성
   if (req.session.user) {
     return res.sendFile(__dirname + "/src/html/boardWrite.html");
   }
 });
 
-app.get("/boardList/:id", (req, res) => {
+app.get("/boardList/:id", (req, res) => { //
   return res.sendFile(__dirname + "/src/html/boardDetail.html");
 });
 
