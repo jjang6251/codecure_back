@@ -12,6 +12,7 @@ const commentButton = document.querySelector("#commentButton");
 const comment = document.querySelector("#comment");
 
 
+
 fetch(`/boardList/${postId}/api`)
 .then(response => response.json())
 .then(data => {

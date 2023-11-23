@@ -11,7 +11,7 @@
     "username": "root",
     "password": "!assaassa0319",
     "database": "login",
-    "host": "134.64.250.52",
+    "host": "34.64.250.52",
     "dialect": "mysql",
     "timezone": "+09:00"
   },

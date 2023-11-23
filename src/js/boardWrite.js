@@ -31,10 +31,12 @@ function addPost(title, content) {
 
 // 게시글 작성 폼 제출 이벤트 처리
 postForm.addEventListener("submit", function(event) {
+    const type = document.querySelector("#board").value;
     event.preventDefault();
     const request = {
         title: title.value,
         content: content.value,
+        type: type
     };
     
     if (title && content) {

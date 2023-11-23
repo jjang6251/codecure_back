@@ -68,4 +68,8 @@ sudo reboot
 today: 방문자수
 
 
+//서버 배포시 node 버전 오류 났을 때
+$ rm -rf node_modules/
+$ npm update
+
 

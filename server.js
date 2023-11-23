@@ -303,7 +303,8 @@ app.post("/boardWrite", (req, res) => { //게시글 작성 api
       title: req.body.title,
       content: req.body.content,
       count: 0,
-      User: req.session.userid
+      User: req.session.stdid,
+      type: req.body.type,
     })
   }
 

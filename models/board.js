@@ -23,6 +23,10 @@ module.exports = (sequelize, DataTypes) => {
     User: {
       type: DataTypes.STRING,
       collate: 'utf8mb4_unicode_ci', // 문자 인코딩 설정
+    },
+    type: {
+      type: DataTypes.STRING,
+      collate: 'utf8mb4_unicode_ci',
     }
   }, {
     sequelize,
