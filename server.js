@@ -48,9 +48,9 @@ app.get('/homepage', (req, res) => { //home url
 
 
 app.get('/', (req, res) => {
-  if(req.session.user){
-    models.Sites.
-  }
+  // if(req.session.user){
+  //   models.Sites.
+  // }
   return res.sendFile(__dirname + "/src/html/home.html");
 });
 
