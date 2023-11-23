@@ -48,24 +48,16 @@ app.get('/homepage', (req, res) => { //home url
 
 
 app.get('/', (req, res) => {
-  const userInput = req.body;
-  console.log(userInput);
+  if(req.session.user){
+    models.Sites.
+  }
   return res.sendFile(__dirname + "/src/html/home.html");
 });
 
 
 
-<<<<<<< HEAD
+
 app.get('/signup', (req, res) => { //회원가입 페이지
-  if (req.session.user) {
-    return res.redirect("/login");
-  }
-=======
-app.get('/signup', (req, res) => {
-  // if (req.session.user) {
-  //   return res.redirect("/login");
-  // }
->>>>>>> 22acb3f56abd7af10a156e6f3b0fdae094e0d576
   return res.sendFile(__dirname + "/src/html/signup.html");
 });
 
@@ -128,31 +120,13 @@ app.post('/memSignup', (req, res) => { //admin페이지 전용
 
 });
 
-<<<<<<< HEAD
-app.get('/memSignup/deleteAll', (req, res) => { //admin 페이지 전용
-  models.codecureMem.findOne({
-    where: {
-      stdid: req.session.stdid
-    }
-  })
-    .then(foundData => {
-      if (foundData) {
-        if (foundData.is_admin == 1) {
-          models.codecureMem.destroy({
-            where: {},
-            truncate: true
-          })
-          return res.status(200).send('명단이 모두 초기화되었습니다.');
-        }
-      } else {
-        return res.status(200).send('명단을 삭제할 권한이 없습니다.');
-=======
+
+
 app.get('/memSignup/deleteAll', (req, res) => {
   if (req.session.stdid) {
     models.codecureMem.findOne({
       where: {
         stdid: req.session.stdid
->>>>>>> 22acb3f56abd7af10a156e6f3b0fdae094e0d576
       }
     })
       .then(foundData => {
@@ -431,7 +405,7 @@ app.get(`/commentList/:id`, (req, res) => {
         return res.json({ message: "댓글이 없습니다" });
       }
     })
-})
+});
 
 
 
