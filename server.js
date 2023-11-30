@@ -19,7 +19,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'https://65685f8bd4d40f10273472c0--astounding-fairy-1340b4.netlify.app/',
   credentials: true
 }));
 app.use(express.static(__dirname + '/src')); // 정적 파일 서비스**
