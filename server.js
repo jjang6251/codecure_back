@@ -1,4 +1,5 @@
 const express = require('express');
+const http = require('http');
 const bodyParser = require('body-parser');
 const models = require("./models");
 const bcrypt = require('bcrypt');
@@ -17,7 +18,10 @@ const PORT = '5000';
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
 app.use(express.static(__dirname + '/src')); // 정적 파일 서비스**
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
