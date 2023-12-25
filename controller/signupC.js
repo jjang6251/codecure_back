@@ -41,10 +41,10 @@ const memSignupApi = (req, res) => {
 };
 
 const memSignupDeleteAllApi = (req, res) => {
-    if (req.session.stdid) {
+    if (req.id) {
         models.codecureMem.findOne({
           where: {
-            stdid: req.session.stdid
+            stdid: req.id
           }
         })
           .then(foundData => {

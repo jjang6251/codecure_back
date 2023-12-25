@@ -8,18 +8,19 @@ dotenv.config();
 const cookieParser = require("cookie-parser");
 const expressSession = require('express-session');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 
 const { renderLogin, loginApi, logoutAPi} = require('./controller/loginC');
 const {memSignupApi, memSignupDeleteAllApi} = require('./controller/signupC');
-const {boardListApi, boardWriteApi, boardListToDetailApi, boardDeleteApi, boardUpdateApi, loadBoardApi, createCommentApi, commentListApi} = require('./controller/boardC');
+const {boardListApi, boardWriteApi, boardListToDetailApi, boardDeleteApi, boardUpdateApi, loadBoardApi, createCommentApi, commentListApi, boardListBoard, boardListQna, boardListNotice} = require('./controller/boardC');
 
-const PORT = '5000';
+const PORT = process.env.PORT;
 
 const app = express();
 
 app.use(express.json());
 app.use(cors({
-  origin: 'https://65685f8bd4d40f10273472c0--astounding-fairy-1340b4.netlify.app/',
+  origin: `${process.env.CORS}`,
   credentials: true
 }));
 app.use(express.static(__dirname + '/src')); // 정적 파일 서비스**
@@ -29,21 +30,29 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 function verifyToken(req, res, next) {
-  // Authorization 헤더에서 토큰 추출
-  const token = req.headers['authorization'];
+  // 쿠키에서 토큰 추출
+  const token = req.cookies['accessToken']; // 'token_name'에는 실제 토큰이 저장된 쿠키 이름을 입력하세요
+
+  console.log(token);
 
   if (!token) {
-    return res.status(403).json({ message: '토큰이 제공되지 않았습니다.' });
+    return res.status(403).json('토큰이 없습니다!!');
   }
 
+  console.log(process.env.ACCESS_TOKEN);
+
+  const secretKey = process.env.ACCESS_TOKEN;
+
   // 토큰 검증
-  jwt.verify(token.split(' ')[1], 'secret_key', (err, decoded) => {
+  jwt.verify(token, secretKey, (err, decoded) => {
     if (err) {
-      return res.status(401).json({ message: '토큰이 유효하지 않습니다.' });
+      res.clearCookie('accessToken', { path: '/', expires: new Date(0) });
+      return res.status(401).json({ message: 'TokenFail' });
     }
 
     // 요청에서 추출된 정보 활용 (예: 유저 아이디)
-    req.userId = decoded.userId;
+    req.cookie_id = decoded.id;
+    req.cookie_name = decoded.name;
     next();
   });
 }
@@ -51,7 +60,7 @@ function verifyToken(req, res, next) {
 // 보호된 엔드포인트 설정
 app.get('/protected', verifyToken, (req, res) => {
   // 토큰 검증을 통과한 경우에만 실행되는 코드
-  res.json({ message: '인증되었습니다!', userId: req.userId });
+  res.json({ message: '인증되었습니다!', userId: req.cookie_id });
 });
 
 // 세션세팅
@@ -71,6 +80,16 @@ app.use('/boardList', (req, res, next) => {
 }); //특정 주소에 대해 항상 리프레쉬 진행;
 
 
+app.get('/checkLogin',verifyToken, (req, res) => {
+  const {accessToken} = req.cookies;
+
+  if(accessToken) {
+    return res.status(200).json({isLoggedIn: "true", username: req.cookie_name});
+  } else {
+    return res.status(200).json({isLoggedIn: "false"});
+  }
+});
+
 app.get('/', (req, res) => {
   // if(req.session.user){
   //   models.Sites.
@@ -81,31 +100,12 @@ app.get('/', (req, res) => {
 
 
 
-app.get('/signup', (req, res) => { //회원가입 페이지
-  return res.sendFile(__dirname + "/src/html/signup.html");
-});
-
-// app.post('/signup', (req, res) =>{ //signup api
-//     const saltRounds = 10;
-//     const password = req.body.password;
-//     bcrypt.hash(password, saltRounds, function(err, hashed_password){
-//         if(err) throw err;
-//         models.User.create({
-//             user_name: req.body.username,
-//             user_id: req.body.id,
-//             user_password: hashed_password,
-//         })
-//     })
-
-//     console.log(req.body.id);
-//     return res.sendStatus(200);
-// });
 
 app.post('/memSignup', memSignupApi);
 
 
 
-app.get('/memSignup/deleteAll', memSignupDeleteAllApi);
+app.get('/memSignup/deleteAll',verifyToken, memSignupDeleteAllApi);
 
 app.get('/modMem', (req, res) => { //admin 회원정보
   if (req.session.user) {
@@ -153,7 +153,7 @@ app.get('/memList', (req, res) => {
 })
 
 
-app.get('/logout', logoutAPi);
+app.get('/logout',verifyToken, logoutAPi);
 
 app.get('/login', renderLogin);
 
@@ -165,8 +165,14 @@ app.get("/boardList", (req, res) => { //admin 페이지
 
 app.get('/boardList/api', boardListApi);
 
-app.get("/boardWrite", (req, res) => { //admin 게시글 작성
-  if (req.session.user) {
+app.get("/boardBoardList", boardListBoard);
+
+app.get("/boardNoticeList", boardListNotice);
+
+app.get("/boardQnaList", boardListQna);
+
+app.get("/boardWrite", verifyToken, (req, res) => { //admin 게시글 작성
+  if (req.cookie_id) {
     return res.sendFile(__dirname + "/src/html/boardWrite.html");
   }
 });
@@ -175,11 +181,12 @@ app.get("/boardList/:id", (req, res) => { //
   return res.sendFile(__dirname + "/src/html/boardDetail.html");
 });
 
+
 app.get("/boardList/:id/api", boardListToDetailApi);
 
-app.post("/boardWrite", boardWriteApi);
+app.post("/boardWrite",verifyToken, boardWriteApi);
 
-app.get("/delete/:id", boardDeleteApi);
+app.get("/delete/:id",verifyToken, boardDeleteApi);
 
 app.get("/boardUpdate/:id", (req, res) => {
   return res.sendFile(__dirname + "/src/html/boardUpdate.html");
@@ -189,9 +196,9 @@ app.get("/loadDatabase/:id", loadBoardApi);
 
 app.post("/boardUpdate/api/:id", boardUpdateApi);
 
-app.post("/comment/:id", createCommentApi);
+app.post("/comment/:id",verifyToken, createCommentApi);
 
-app.get(`/commentList/:id`, commentListApi);
+app.get(`/commentList/:id`,verifyToken, commentListApi);
 
 
 
