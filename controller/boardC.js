@@ -66,6 +66,8 @@ const boardWriteApi = (req, res) => {
       User: req.cookie_name,
       type: req.body.type,
     })
+  } else {
+    return res.status(200).json({message: '로그인이 필요합니다!'});
   }
 };
 

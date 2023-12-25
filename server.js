@@ -184,7 +184,7 @@ app.get("/boardList/:id", (req, res) => { //
 
 app.get("/boardList/:id/api", boardListToDetailApi);
 
-app.post("/boardWrite",verifyToken, boardWriteApi);
+app.post("/boardWrite", verifyToken ,boardWriteApi);
 
 app.get("/delete/:id",verifyToken, boardDeleteApi);
 
