@@ -99,7 +99,7 @@ const boardDeleteApi = (req, res) => {
     }
   })
     .then(board => {
-      if (board.User == req.name) {
+      if (board.User == req.cookie_name) {
         models.Board.destroy({
           where: {
             id: id
